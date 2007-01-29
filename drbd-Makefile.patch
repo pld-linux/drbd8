@@ -1,29 +1,33 @@
---- drbd-0.7.22.orig/user/Makefile	2004-10-28 12:44:25.000000000 +0000
-+++ drbd-0.7.22.Makefile/user/Makefile	2006-11-23 23:22:42.000000000 +0000
-@@ -17,7 +17,7 @@
- # the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
- #
+--- drbd-8.0.0/user/Makefile.orig	2007-01-16 21:07:58.000000000 +0100
++++ drbd-8.0.0/user/Makefile	2007-01-29 17:08:57.844752000 +0100
+@@ -20,7 +20,7 @@
+ KDIR := /lib/modules/$(shell uname -r)/build
  
--CFLAGS = -c -Wall -I../drbd
-+CFLAGS = $(OPTCFLAGS) -Wall -I../drbd
  CC = gcc
- 
- drbdadm-obj = drbdadm_scanner.o drbdadm_parser.o drbdadm_main.o \
-@@ -28,7 +28,7 @@
- all: drbdsetup drbdadm
+-CFLAGS = -g -O2 -c -W -Wall -I../drbd
++CFLAGS = $(OPTCFLAGS) -Wall -I../drbd
+ # for the netlink connector stuff <linux/connector.h>:
+ drbdsetup: CFLAGS += -I$(KDIR)/include
+ drbdsetup drbdmeta: CFLAGS += -fno-strict-aliasing
+@@ -43,7 +43,7 @@
+ 	cp $^ $@
  
  drbdadm: $(drbdadm-obj)
--	$(CC) -o $@ $^ 
+-	$(CC) -o $@ $^
 +	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
  
  drbdadm_scanner.c: drbdadm_scanner.fl drbdadm_parser.h
  	flex -s -odrbdadm_scanner.c drbdadm_scanner.fl
-@@ -42,7 +42,7 @@
- 	bison -d -o drbdadm_parser.c drbdadm_parser.y
+@@ -54,10 +54,10 @@
+ # for debug:	flex -d -s -odrbdadm_scanner.c drbdadm_scanner.fl
  
  drbdsetup: $(drbdsetup-obj)
--	$(CC) -o $@ $^ 
+-	$(CC) -o $@ $^
++	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+ 
+ drbdmeta: $(drbdmeta-obj)
+-	$(CC) -o $@ $^
 +	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
  
  clean:
- 	rm -f drbdadm_scanner.c
+ 	rm -f drbdadm_scanner.c drbdmeta_scanner.c
