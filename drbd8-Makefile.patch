@@ -1,0 +1,33 @@
+--- drbd-8.0.0/user/Makefile.orig	2007-01-16 21:07:58.000000000 +0100
++++ drbd-8.0.0/user/Makefile	2007-01-29 17:08:57.844752000 +0100
+@@ -20,7 +20,7 @@
+ KDIR := /lib/modules/$(shell uname -r)/build
+ 
+ CC = gcc
+-CFLAGS = -g -O2 -c -W -Wall -I../drbd
++CFLAGS = $(OPTCFLAGS) -Wall -I../drbd
+ # for the netlink connector stuff <linux/connector.h>:
+ drbdsetup: CFLAGS += -I$(KDIR)/include
+ drbdsetup drbdmeta: CFLAGS += -fno-strict-aliasing
+@@ -43,7 +43,7 @@
+ 	cp $^ $@
+ 
+ drbdadm: $(drbdadm-obj)
+-	$(CC) -o $@ $^
++	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+ 
+ drbdadm_scanner.c: drbdadm_scanner.fl drbdadm_parser.h
+ 	flex -s -odrbdadm_scanner.c drbdadm_scanner.fl
+@@ -54,10 +54,10 @@
+ # for debug:	flex -d -s -odrbdadm_scanner.c drbdadm_scanner.fl
+ 
+ drbdsetup: $(drbdsetup-obj)
+-	$(CC) -o $@ $^
++	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+ 
+ drbdmeta: $(drbdmeta-obj)
+-	$(CC) -o $@ $^
++	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+ 
+ clean:
+ 	rm -f drbdadm_scanner.c drbdmeta_scanner.c
