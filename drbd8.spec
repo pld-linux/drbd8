@@ -27,13 +27,13 @@
 Summary:	drbd is a block device designed to build high availibility clusters
 Summary(pl.UTF-8):	drbd jest urządzeniem blokowym dla klastrów o wysokiej niezawodności
 Name:		%{pname}8%{_alt_kernel}
-Version:	8.2.1
+Version:	8.2.5
 Release:	%{_rel}
 License:	GPL
 Group:		Base/Kernel
 Source0:	http://oss.linbit.com/drbd/8.2/%{pname}-%{version}.tar.gz
-# Source0-md5:	345c1056b2033184a7935c1bb79cc57e
-Patch0:		%{pname}-Makefile.patch
+# Source0-md5:	f3297c1d032fd90cd0441285fef05bcb
+Patch0:		%{pname}8-Makefile.patch
 URL:		http://www.drbd.org/
 %if %{with userspace}
 BuildRequires:	bison
@@ -72,7 +72,7 @@ Requires(postun):	/usr/sbin/groupdel
 Requires:	rc-scripts
 Provides:	group(haclient)
 Conflicts:	drbdsetup24
-Conflicts:	drbdsetup
+Conflicts:	drbdsetup < 8.0.0
 
 %description -n drbdsetup8
 Setup tool and init scripts for DRBD.
@@ -88,6 +88,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 Requires(post,postun):	/sbin/depmod
 Requires:	drbdsetup8
+Conflicts:	kernel%{_alt_kernel}-block-drbd
 
 %description -n kernel%{_alt_kernel}-block-drbd8
 drbd is a block device which is designed to build high availability
@@ -107,6 +108,7 @@ Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 Requires(post,postun):	/sbin/depmod
 Requires:	drbdsetup8
+Conflicts:	kernel%{_alt_kernel}-smp-block-drbd
 
 %description -n kernel%{_alt_kernel}-smp-block-drbd8
 drbd is a block device which is designed to build high availability
@@ -121,12 +123,12 @@ przez (dedykowaną) sieć. Może być widoczny jako sieciowy RAID1.
 %prep
 %setup -q -n %{pname}-%{version}
 %patch0 -p1
-#%patch1 -p1
 
 %build
 %if %{with userspace}
 %{__make} tools \
 	KVER=dummy \
+	KDIR=/usr/include \
 	CC="%{__cc}" \
 	OPTCFLAGS="%{rpmcflags}" \
 	LDFLAGS="%{rpmldflags}"
@@ -146,7 +148,7 @@ install -d $RPM_BUILD_ROOT{/sbin,%{_mandir}/man{5,8},%{_sysconfdir}} \
 	$RPM_BUILD_ROOT{/etc/rc.d/init.d,/etc/ha.d/resource.d}
 
 %if %{with kernel}
-%install_kernel_modules -m drbd/drbd -d block -s 8
+%install_kernel_modules -m drbd/drbd -d block
 %endif
 
 %if %{with userspace}
@@ -193,6 +195,7 @@ if [ "$1" = "0" ]; then
 	%groupremove haclient
 fi
 
+
 %if %{with userspace}
 %files -n drbdsetup8
 %defattr(644,root,root,755)
@@ -210,13 +213,13 @@ fi
 %files -n kernel%{_alt_kernel}-block-drbd8
 %defattr(644,root,root,755)
 %doc ChangeLog README
-/lib/modules/%{_kernel_ver}/block/drbd-8.ko*
+/lib/modules/%{_kernel_ver}/block/drbd.ko*
 %endif
 
 %if %{with smp} && %{with dist_kernel}
 %files -n kernel%{_alt_kernel}-smp-block-drbd8
 %defattr(644,root,root,755)
 %doc ChangeLog README
-/lib/modules/%{_kernel_ver}smp/block/drbd-8.ko*
+/lib/modules/%{_kernel_ver}smp/block/drbd.ko*
 %endif
 %endif
