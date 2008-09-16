@@ -4,7 +4,6 @@
 %bcond_without	kernel		# don't build kernel modules
 %bcond_without	userspace	# don't build userspace module
 %bcond_with	verbose		# verbose build (V=1)
-%bcond_with	grsec_kernel	# build for kernel-grsecurity
 
 %if %{without kernel}
 %undefine	with_dist_kernel
