@@ -22,7 +22,7 @@
 %define		_enable_debug_packages	0
 %endif
 
-%define		rel		4
+%define		rel		5
 %define		pname	drbd
 Summary:	drbd is a block device designed to build high availibility clusters
 Summary(pl.UTF-8):	drbd jest urządzeniem blokowym dla klastrów o wysokiej niezawodności
@@ -105,7 +105,7 @@ Summary:	SMP kernel module with drbd - a block device designed to build high ava
 Summary(pl.UTF-8):	Wersja SMP Modułu jądra do drbd - urządzenia blokowego dla klastrów o wysokiej niezawodności
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{?with_dist_kernel:%requires_releq_kernel_smp}
+%{?with_dist_kernel:Requires:	kernel%{_alt_kernel}(vermagic) = %{_kernel_ver}}
 Requires(post,postun):	/sbin/depmod
 Requires:	drbdsetup8
 Conflicts:	kernel%{_alt_kernel}-smp-block-drbd
