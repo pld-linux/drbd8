@@ -1,11 +1,11 @@
 --- drbd-8.0.0/user/Makefile.orig	2007-01-16 21:07:58.000000000 +0100
 +++ drbd-8.0.0/user/Makefile	2007-01-29 17:08:57.844752000 +0100
-@@ -20,7 +20,7 @@
- KDIR := /lib/modules/$(shell uname -r)/build
+@@ -21,7 +21,7 @@
  
  CC = gcc
--CFLAGS = -g -O2 -c -W -Wall -I../drbd
-+CFLAGS = $(OPTCFLAGS) -Wall -I../drbd
+ OPTFLAGS = -O2
+-CFLAGS = -g $(OPTFLAGS) -c -W -Wall -I../drbd
++CFLAGS = -g $(OPTFLAGS) -W -Wall -I../drbd
  # for the netlink connector stuff <linux/connector.h>:
  drbdsetup: CFLAGS += -I$(KDIR)/include
  drbdsetup drbdmeta: CFLAGS += -fno-strict-aliasing
